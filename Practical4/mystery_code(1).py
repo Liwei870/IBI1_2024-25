@@ -11,6 +11,7 @@ from random import randint
 from math import ceil
 
 progress=0
+# when the first random is not equal to the second random number, the loop will continue and the process will record how many times it loop
 while progress>=0:
 	progress+=1
 	first_n = randint(1,6)
