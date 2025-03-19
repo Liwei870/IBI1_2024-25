@@ -1,4 +1,4 @@
-# Creat a dictionary
+# Creat a dictionary to contain all the data
 # Generate a bar plot through the dictionary
 # Output the of debelopers using a specified language
 import matplotlib.pyplot as plt
