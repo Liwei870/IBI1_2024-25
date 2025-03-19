@@ -11,11 +11,13 @@ print("Sorted UK populations:", sorted_uk_populations)
 print("Sorted China populations:", sorted_china_populations)
 # 2. Generate pie charts
 # Population distribution in UK countries
+#To determine the figure size
 plt.figure(figsize=(10, 5))
+#Draw the population distribution in UK countries
 plt.subplot(1, 2, 1)
 plt.pie(uk_populations, labels=uk_countries, autopct='%1.1f%%', startangle=140, colors=['skyblue', 'lightgreen', 'lightcoral', 'gold'])
 plt.title('Population Distribution in UK Countries')
-# Population distribution in Zhejiang-neighbouring provinces
+# Draw the population distribution in Zhejiang-neighbouring provinces
 plt.subplot(1, 2, 2)
 plt.pie(china_populations, labels=china_provinces, autopct='%1.1f%%', startangle=140, colors=['skyblue', 'lightgreen', 'lightcoral', 'gold', 'violet'])
 plt.title('Population Distribution in Zhejiang-Neighbouring Provinces')
