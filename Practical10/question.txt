@@ -1,0 +1,6 @@
+Question: How does the relationship between the DALYs of China and the United Kingdom change over time?
+Code starting line:54
+Result discussion: 
+1.From the plotted graph, it can be seen that the trends of DALYs over time in China and the United Kingdom are different. 
+2.China's DALYs show a downward trend in some years, while the DALYs in the United Kingdom are relatively stable overall.
+3.This may be related to different medical and health policies, economic development levels, and population structures in the two countries.
