@@ -1,16 +1,19 @@
+Human SOD2 Protein Characteristics
+The human SOD2 protein has 222 amino acids in length and is subcellularly localised in the mitochondrion matrix. 
+This localisation is crucial as it allows the protein to perform its function of scavenging superoxide radicals within the mitochondria, an organelle where a significant amount of reactive oxygen species are generated during normal cellular metabolism.
+
 Result
 Online BLAST Results: For the human SOD2 protein query against the UniProt database with the BLAST search restricted to Eutheria, 1445 hits were obtained. 
-The range of percentage identity among the retrieved alignments was from 58.1% to 100%. 
+The range of percentage identity among the retrieved alignments was from 58.1% to 100%.  
+This range indicates the degree of sequence similarity between the human SOD2 protein and other homologous proteins in the database. 
+A wider range might suggest a diverse evolutionary history with some proteins being more distantly related while others are closer in sequence.
 The alignment with the mouse SOD2 protein (UniProt ID: P09671) had a percentage identity of 90.1%.
+
 Python Alignment Results:
 Human - Mouse Comparison: The alignment score was 1097, and the percentage of identical amino acids was 90.09%.
 Human - Random Comparison: The alignment score was -241, and the percentage of identical amino acids was 4.95%.
 Mouse - Random Comparison: The alignment score was -240, and the percentage of identical amino acids was 4.95%.
 
-Interpretation
-Online BLAST: The presence of multiple hits with varying percentage identities in the BLAST results indicates that there are related proteins within the Eutheria taxon. The relatively high percentage identity with the mouse SOD2 protein suggests a close evolutionary relationship between the human and mouse SOD2 proteins. This is expected as humans and mice are both mammals and share a common ancestor. Residues highlighted in blue and grey in the alignment visualization likely represent identical and conserved amino acids respectively, which are important for the protein's structure and function.
-Python Alignment:
-Human - Mouse: The high alignment score and percentage of identical amino acids in the human - mouse comparison further support the close evolutionary relationship. These results suggest that the two proteins have similar sequences, which may lead to similar functions. The conserved regions are likely crucial for the biological activity of SOD2, such as its role in destroying superoxide anions in the cell.
-Human - Random and Mouse - Random: The significantly lower alignment scores and percentages of identical amino acids in these comparisons confirm that the random sequence has no real evolutionary connection to the human or mouse SOD2 proteins. This validates the alignment methods used, both in terms of calculating scores based on the BLOSUM62 matrix and determining sequence similarity. These two groups can give a more powerful support for the result of the group of Human-Mouse.
-
-In conclusion, both the online BLAST and Python alignment methods provide evidence for the close relationship between human and mouse SOD2 proteins. The use of the BLOSUM62 matrix in the Python alignment allows for a quantitative assessment of sequence similarity, which is consistent with the qualitative insights from the BLAST search.
+Sequence Relationship
+Based on the alignment scores and percentages of identical amino acids, the human and mouse SOD2 sequences are most closely related. 
+The high alignment score and percentage of identical amino acids between them, compared to the results involving the random sequence, indicate a shared evolutionary origin. This close relationship is consistent with the fact that humans and mice are both mammals and likely have conserved functional regions in the SOD2 protein to carry out essential antioxidant functions.
