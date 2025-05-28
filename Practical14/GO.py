@@ -2,7 +2,7 @@ import xml.dom.minidom as xdm
 import xml.sax as xs
 import time
 
-# define the pathway of sax to parse .xml file
+# SAX parser handler for processing GO XML files
 class GOHandler(xs.ContentHandler):
     
     def __init__(self):
@@ -12,15 +12,15 @@ class GOHandler(xs.ContentHandler):
         self.name = ""
         self.is_a = 0
         self.max = {
-            "molecular_function": {"count": 0, "id": "", "name": ""},
-            "biological_process": {"count": 0, "id": "", "name": ""},
-            "cellular_component": {"count": 0, "id": "", "name": ""}
+            "molecular_function": {"count": 0, "terms": []},
+            "biological_process": {"count": 0, "terms": []},
+            "cellular_component": {"count": 0, "terms": []}
         }
     
     def startElement(self, tag, attrs):
         self.current = tag
         if tag == "term":
-            # Reset all relevant fields for new <term>
+            # Reset fields for new term
             self.ns = ""
             self.id = ""
             self.name = ""
@@ -29,46 +29,56 @@ class GOHandler(xs.ContentHandler):
             self.is_a += 1
     
     def characters(self, content):
-        if self.current == "namespace": self.ns += content.strip()
-        elif self.current == "id": self.id += content.strip()
-        elif self.current == "name": self.name += content.strip()
+        if self.current == "namespace":
+            self.ns += content.strip()
+        elif self.current == "id":
+            self.id += content.strip()
+        elif self.current == "name":
+            self.name += content.strip()
     
     def endElement(self, tag):
         if tag == "term":
-            if self.ns in self.max and self.is_a > self.max[self.ns]["count"]:
-                self.max[self.ns] = {
-                    "count": self.is_a,
-                    "id": self.id,
-                    "name": self.name[:20] + "..." if len(self.name) > 20 else self.name
-                }
+            if self.ns in self.max:
+                # Update max count and terms list
+                if self.is_a > self.max[self.ns]["count"]:
+                    self.max[self.ns] = {"count": self.is_a, "terms": [{"id": self.id, "name": self.name}]}
+                elif self.is_a == self.max[self.ns]["count"]:
+                    self.max[self.ns]["terms"].append({"id": self.id, "name": self.name})
             self.current = ""
 
-
+# Analyze GO XML file using DOM API
 def dom_analyze(file):
     start = time.time()
     dom = xdm.parse(file)
     terms = dom.getElementsByTagName("term")
-    max = {
-        "molecular_function": {"count": 0, "id": "", "name": ""},
-        "biological_process": {"count": 0, "id": "", "name": ""},
-        "cellular_component": {"count": 0, "id": "", "name": ""}
+    max_counts = {
+        "molecular_function": {"count": 0, "terms": []},
+        "biological_process": {"count": 0, "terms": []},
+        "cellular_component": {"count": 0, "terms": []}
     }
     
     for term in terms:
-        ns = term.getElementsByTagName("namespace")[0].firstChild.data
-        if ns in max:
-            id = term.getElementsByTagName("id")[0].firstChild.data
-            name = term.getElementsByTagName("name")[0].firstChild.data
-            is_a = len(term.getElementsByTagName("is_a"))
-            if is_a > max[ns]["count"]:
-                max[ns] = {
-                    "count": is_a,
-                    "id": id,
-                    "name": name
-                }
+        try:
+            ns = term.getElementsByTagName("namespace")[0].firstChild.data
+            if ns in max_counts:
+                id_node = term.getElementsByTagName("id")[0].firstChild
+                name_node = term.getElementsByTagName("name")[0].firstChild
+                if id_node and name_node:
+                    id = id_node.data
+                    name = name_node.data
+                    is_a = len(term.getElementsByTagName("is_a"))
+                    
+                    if is_a > max_counts[ns]["count"]:
+                        max_counts[ns] = {"count": is_a, "terms": [{"id": id, "name": name}]}
+                    elif is_a == max_counts[ns]["count"]:
+                        max_counts[ns]["terms"].append({"id": id, "name": name})
+        except (IndexError, AttributeError):
+            # Skip malformed term nodes
+            continue
     
-    return max, time.time() - start
+    return max_counts, time.time() - start
 
+# Analyze GO XML file using SAX API
 def sax_analyze(file):
     start = time.time()
     parser = xs.make_parser()
@@ -77,21 +87,32 @@ def sax_analyze(file):
     parser.parse(file)
     return handler.max, time.time() - start
 
+# Format and print analysis results
 def print_result(data, api, time):
-    print(f"\n{api} API ({time:.2f}s):")
-    print(f"{'Namespace':<20} {'ID':<12} {'Name':<32} Count")
+    print(f"\n{api} Results:")
     for ns in data:
-        print(f"{ns:<20} {data[ns]['id']:<12} {data[ns]['name']:<35} {data[ns]['count']}")
+        terms = data[ns]["terms"]
+        ids = [term["id"] for term in terms]
+        print(f"{ns}: {ids} with {data[ns]['count']} is_a elements")
 
 if __name__ == "__main__":
+    # Note: Use raw string to avoid escape characters
     file = "E:\IBI1\IBI1_2024-25\IBI1_2024-25\Practical14\go_obo.xml"
     
-    dom, t1 = dom_analyze(file)
-    sax, t2 = sax_analyze(file)
-    
-    print_result(dom, "DOM", t1)
-    print_result(sax, "SAX", t2)
-    
-    if t2 > t1: print("SAX is slower than DOM")
-    elif t1>t2: print("SAX is faster than DOM")
-    else: print("The two ways are equaled")
+    try:
+        dom, t1 = dom_analyze(file)
+        sax, t2 = sax_analyze(file)
+        
+        print_result(dom, "DOM", t1)
+        print_result(sax, "SAX", t2)
+        
+        if t2 > t1:
+            print("\nSAX is slower than DOM")
+        elif t1 > t2:
+            print("\nSAX is faster than DOM")
+        else:
+            print("\nThe two methods have the same performance")
+    except FileNotFoundError:
+        print(f"Error: File {file} not found")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
