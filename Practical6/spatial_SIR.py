@@ -1,4 +1,12 @@
-# import necessary libraries
+#Pseudocode:
+#Import necessary libraries
+#Model the spatial SIR model using a grid-based approach
+#Create a 100x100 grid to represent the population
+#Randomly select an initial infected individual
+#Lists to record the number of individuals in each state at each time step
+#Count the number of individuals in each state at the current time step
+#Update the number of individuals in each state based on the infection and recovery processes
+# Plot the heatmap of the population state at specific time points
 import numpy as np
 import matplotlib.pyplot as plt
 # Model parameters
